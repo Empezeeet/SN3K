@@ -25,9 +25,12 @@ class Renderer(threading.Thread):
         """
         self.size = kwargs.get("size", 32)
         self.fps = kwargs.get("fps", 2)
+        self.last_pos = [1, 1]
         pass
     
-    async def new_frame_renderer(self, snek: list, food: list, points: int = 0, highscore: int = 0):
+    async def new_frame_renderer(self, snek: list, food: list, points: int = 0, length: int = 1):
+        
+        
         """
             snek: list, (x, y)
             food: list, (x, y)
@@ -35,15 +38,20 @@ class Renderer(threading.Thread):
         print("-" + "-" * (self.size-2) + "-")
         try:
             for i in range(self.size - 2):
+                
                 line_content = [" " for i in range(self.size - 2)]
+                
                 if (snek[1] == i): line_content[snek[0]] = "o"
                 if (food[1] == i): line_content[food[0]] = "X"
+                if (self.last_pos[1] == i) and (self.last_pos != snek): line_content[self.last_pos[0]] = "a"
                 print("|" + "".join(line_content) + "|")
         except IndexError:
             pass 
         print("-" + "-" * (self.size-2) + "-")   
         print("Points: " + str(points)) 
-        print("Highscore: " + str(highscore))
+        print("Length: " + str(length))
+        if self.last_pos != snek: 
+            self.last_pos = snek,
 
     
     def render_game_over_screen(self, points: int, start_time: float):
@@ -62,8 +70,12 @@ class Player():
         self.renderer = Renderer(size=size, fps=2)
         self.fruit = [15, 15]
         self.points = 0
+        self.length = round(self.points / 2 + 1, 0)
+        self.last_positions = []
     def _main(self):
         while True:
+            self.last_positions.append(self.position)
+            
             # when the player presses specific arrow key the snek will move in that direction
             if keyboard.is_pressed("up"): self.direction = Direction.UP
             elif keyboard.is_pressed("down"): self.direction = Direction.DOWN    
@@ -87,9 +99,12 @@ class Player():
                 break
             if self.position[1] < -1:
                 break
+            
             os.system("cls")
             asyncio.run(self.renderer.new_frame_renderer(self.position, self.fruit, points=self.points))
+            
             time.sleep(self.renderer.fps / 30)
+            
         self.renderer.render_game_over_screen(self.points, self.start_time)
     def run(self):
         self.start_time = time.time()
@@ -97,7 +112,7 @@ class Player():
          
 def main():
     while True:
-        player = Player(size=32)
+        player = Player(size=50)
         os.system(f"mode {player.renderer.size+3},{player.renderer.size+5}")
         player.run()
         if (input("Do you want to play again? (y/n): ") == "y"):
@@ -107,4 +122,5 @@ def main():
     print("Thanks for playing!")
     input("Press enter to exit...")
            
-main()
+if __name__ == "__main__":
+    main()
