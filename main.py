@@ -59,7 +59,8 @@ class Player():
     def __init__(self, size: int = 32):
         self.direction = Direction.STAY
         self.position = [1, 1]
-        self.renderer = Renderer(size=size, fps=2)
+        self.size = size
+        self.renderer = Renderer(size=self.size, fps=2)
         self.fruit = [15, 15]
         self.points = 0
     def _main(self):
@@ -78,15 +79,14 @@ class Player():
             if self.position == self.fruit:
                 self.fruit = [random.randint(4, self.renderer.size-4), random.randint(4, self.renderer.size-4)]
                 self.points += 1
+                
             # if out of bands end game
-            if self.position[0] > self.renderer.size - 2:  
-                break
-            if self.position[0] < -1:  
-                break
-            if self.position[1] > self.renderer.size - 2:
-                break
-            if self.position[1] < -1:
-                break
+            if self.position[0] > self.renderer.size - 2:   break
+            if self.position[0] < -1:   break
+            if self.position[1] > self.renderer.size - 2: break
+            if self.position[1] < -1: break
+            
+            
             os.system("cls")
             asyncio.run(self.renderer.new_frame_renderer(self.position, self.fruit, points=self.points))
             time.sleep(self.renderer.fps / 30)
