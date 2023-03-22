@@ -55,10 +55,6 @@ class Renderer(threading.Thread):
         print("|" + "    Points: " + str(points))
         print("|" + "    Time: " + str(round(time.time() - start_time, 2)))
         print("-" + "-" * self.size + "-")
-        # Write last score to file  
-        with open("last_score.txt", "w") as f:
-            f.truncate(0)
-            f.write(f"Points: {points}\nTime: {round(time.time() - start_time, 2)}")
 class Player():
     def __init__(self, size: int = 32):
         self.direction = Direction.STAY
