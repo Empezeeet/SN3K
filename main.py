@@ -90,7 +90,7 @@ class Player():
             if self.position[1] >= self.renderer.size - 2: break
             if self.position[1] < -1: break
             
-            pos = self.position9
+            pos = self.position
             os.system("cls")
             asyncio.run(self.renderer.new_frame_renderer(self.position, self.fruit, points=self.points))
             time.sleep(self.renderer.fps / 30)
@@ -101,7 +101,7 @@ class Player():
          
 def main():
     while True:
-        player = Player(size=32)
+        player = Player(size=48)
         os.system(f"mode {player.renderer.size+3},{player.renderer.size+5}")
         player.run()
         if (input("Do you want to play again? (y/n): ") == "y"):
