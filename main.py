@@ -1,4 +1,3 @@
-
 import threading
 import time
 import keyboard
@@ -13,7 +12,7 @@ class Direction(Enum):
     RIGHT = 3
     STAY = 4
 
-
+pos = []
 
 
 class Renderer(threading.Thread):
@@ -64,6 +63,7 @@ class Player():
         self.fruit = [15, 15]
         self.points = 0
     def _main(self):
+        global pos
         while True:
             # when the player presses specific arrow key the snek will move in that direction
             if keyboard.is_pressed("up"): self.direction = Direction.UP
@@ -76,17 +76,21 @@ class Player():
             elif self.direction == Direction.DOWN: self.position[1] += 1
             elif self.direction == Direction.LEFT: self.position[0] -= 1
             elif self.direction == Direction.RIGHT: self.position[0] += 1   
+            
+            
+            
+            
             if self.position == self.fruit:
                 self.fruit = [random.randint(4, self.renderer.size-4), random.randint(4, self.renderer.size-4)]
                 self.points += 1
                 
             # if out of bands end game
-            if self.position[0] > self.renderer.size - 2:   break
+            if self.position[0] >= self.renderer.size - 2:   break
             if self.position[0] < -1:   break
-            if self.position[1] > self.renderer.size - 2: break
+            if self.position[1] >= self.renderer.size - 2: break
             if self.position[1] < -1: break
             
-            
+            pos = self.position9
             os.system("cls")
             asyncio.run(self.renderer.new_frame_renderer(self.position, self.fruit, points=self.points))
             time.sleep(self.renderer.fps / 30)
