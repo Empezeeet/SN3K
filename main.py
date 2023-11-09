@@ -84,7 +84,7 @@ class Player():
                 self.fruit = [random.randint(4, self.renderer.size-4), random.randint(4, self.renderer.size-4)]
                 self.points += 1
                 
-            # if out of bands end game
+            # if out of bounds end game
             if self.position[0] >= self.renderer.size - 2:   break
             if self.position[0] < -1:   break
             if self.position[1] >= self.renderer.size - 2: break
